@@ -20,7 +20,7 @@ from iris_intelowl_module.intelowl_handler.intelowl_handler import IntelowlHandl
 
 class IrisIntelowlInterface(IrisModuleInterface):
     """
-    Provide the interface between Iris and intelowlHandler
+    Provide the interface between Iris and IntelowlHandler
     """
     name = "IrisIntelowlInterface"
     _module_name = interface_conf.module_name
@@ -30,10 +30,9 @@ class IrisIntelowlInterface(IrisModuleInterface):
     _pipeline_support = interface_conf.pipeline_support
     _pipeline_info = interface_conf.pipeline_info
     _module_configuration = interface_conf.module_configuration
-    
+
     _module_type = IrisModuleTypes.module_processor
-    
-     
+
     def register_hooks(self, module_id: int):
         """
         Registers all the hooks
@@ -78,7 +77,6 @@ class IrisIntelowlInterface(IrisModuleInterface):
         else:
             self.deregister_from_hook(module_id=self.module_id, iris_hook_name='on_manual_trigger_ioc')
 
-
     def hooks_handler(self, hook_name: str, hook_ui_name: str, data: any):
         """
         Hooks handler table. Calls corresponding methods depending on the hooks name.
@@ -104,7 +102,6 @@ class IrisIntelowlInterface(IrisModuleInterface):
         self.log.info(f"Successfully processed hook {hook_name}")
         return InterfaceStatus.I2Success(data=data, logs=list(self.message_queue))
 
-
     def _handle_ioc(self, data) -> InterfaceStatus.IIStatus:
         """
         Handle the IOC data the module just received. The module registered
@@ -117,8 +114,8 @@ class IrisIntelowlInterface(IrisModuleInterface):
         """
 
         intelowl_handler = IntelowlHandler(mod_config=self.module_dict_conf,
-                               server_config=self.server_dict_conf,
-                               logger=self.log)
+                                           server_config=self.server_dict_conf,
+                                           logger=self.log)
 
         in_status = InterfaceStatus.IIStatus(code=InterfaceStatus.I2CodeNoError)
 
@@ -128,7 +125,7 @@ class IrisIntelowlInterface(IrisModuleInterface):
                 status = intelowl_handler.handle_domain(ioc=element)
                 in_status = InterfaceStatus.merge_status(in_status, status)
 
-            #elif element.ioc_type.type_name in ['md5', 'sha224', 'sha256', 'sha512']:
+            # elif element.ioc_type.type_name in ['md5', 'sha224', 'sha256', 'sha512']:
             #    status = intelowl_handler.handle_hash(ioc=element)
             #    in_status = InterfaceStatus.merge_status(in_status, status)
             #
@@ -138,4 +135,3 @@ class IrisIntelowlInterface(IrisModuleInterface):
                 self.log.error(f'IOC type {element.ioc_type.type_name} not handled by intelowl module. Skipping')
 
         return in_status(data=data)
-    

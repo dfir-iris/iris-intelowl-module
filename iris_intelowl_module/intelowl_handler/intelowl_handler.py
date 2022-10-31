@@ -15,6 +15,8 @@ from jinja2 import Template
 import iris_interface.IrisInterfaceStatus as InterfaceStatus
 from app.datamgmt.manage.manage_attribute_db import add_tab_attribute_field
 
+from pyintelowl import IntelOwl, IntelOwlClientException
+
 
 class IntelowlHandler(object):
     def __init__(self, mod_config, server_config, logger):
@@ -27,22 +29,29 @@ class IntelowlHandler(object):
         """
         Returns an intelowl API instance depending if the key is premium or not
 
-        :return: { cookiecutter.keyword }} Instance
+        :return: IntelOwl Instance
         """
         url = self.mod_config.get('intelowl_url')
         key = self.mod_config.get('intelowl_key')
+        should_use_proxy = self.mod_config.get('intelowl_should_use_proxy')
         proxies = {}
 
-        if self.server_config.get('http_proxy'):
-            proxies['https'] = self.server_config.get('HTTPS_PROXY')
+        # https://github.com/intelowlproject/pyintelowl/issues/160
+        # PyIntelOwl doesn't get proxy settings as argument
+        if should_use_proxy is True:
+            if self.server_config.get('http_proxy'):
+                proxies['https'] = self.server_config.get('HTTPS_PROXY')
 
-        if self.server_config.get('https_proxy'):
-            proxies['http'] = self.server_config.get('HTTP_PROXY')
+            if self.server_config.get('https_proxy'):
+                proxies['http'] = self.server_config.get('HTTP_PROXY')
 
-        # TODO!
-        # Here get your intelowl instance and return it
-        # ex: return intelowlApi(url, key)
-        return "<TODO>"
+        intelowl = IntelOwl(
+            key,
+            url,
+            None,
+        )
+
+        return intelowl
 
     def gen_domain_report_from_template(self, html_template, intelowl_report) -> InterfaceStatus:
         """
@@ -63,8 +72,8 @@ class IntelowlHandler(object):
             rendered = template.render(pre_render)
 
         except Exception:
-            print(traceback.format_exc())
-            log.error(traceback.format_exc())
+
+            self.log.error(traceback.format_exc())
             return InterfaceStatus.I2Error(traceback.format_exc())
 
         return InterfaceStatus.I2Success(data=rendered)
@@ -79,12 +88,14 @@ class IntelowlHandler(object):
 
         self.log.info(f'Getting domain report for {ioc.ioc_value}')
 
-        # TODO! do your stuff, then report it to the element (here an IOC)
+        domain = ioc.ioc_value
+        results = self.intelowl.send_observable_analysis_request(observable_name=domain)
+        job_id = results["job_id"]
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute intelowl Domain Report to IOC')
 
-            report = ["<TODO> report from intelowl"]
+            report = [results]
 
             status = self.gen_domain_report_from_template(self.mod_config.get('intelowl_domain_report_template'), report)
 

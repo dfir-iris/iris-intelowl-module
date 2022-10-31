@@ -20,7 +20,7 @@ pipeline_info = {}
 module_configuration = [
     {
         "param_name": "intelowl_url",
-        "param_human_name": "intelowl URL",
+        "param_human_name": "IntelOwl URL",
         "param_description": "",
         "default": None,
         "mandatory": True,
@@ -28,13 +28,21 @@ module_configuration = [
     },
     {
         "param_name": "intelowl_key",
-        "param_human_name": "intelowl key",
-        "param_description": "intelowl API key",
+        "param_human_name": "IntelOwl API key",
+        "param_description": "IntelOwl API key",
         "default": None,
         "mandatory": True,
         "type": "sensitive_string"
     },
-    
+    {
+        "param_name": "intelowl_should_use_proxy",
+        "param_human_name": "Future - Set global proxy settings for IntelOwl module",
+        "param_description": "Set true or false to decide whether or not the global proxy settings should be set for "
+                             "IntelOwl usage",
+        "default": False,
+        "mandatory": True,
+        "type": "bool"
+    },
     {
         "param_name": "intelowl_manual_hook_enabled",
         "param_human_name": "Manual triggers on IOCs",
@@ -47,7 +55,7 @@ module_configuration = [
     {
         "param_name": "intelowl_on_create_hook_enabled",
         "param_human_name": "Triggers automatically on IOC create",
-        "param_description": "Set to True to automatically add a intelowl insight each time an IOC is created",
+        "param_description": "Set to True to automatically add a IntelOwl insight each time an IOC is created",
         "default": False,
         "mandatory": True,
         "type": "bool",
@@ -56,7 +64,7 @@ module_configuration = [
     {
         "param_name": "intelowl_on_update_hook_enabled",
         "param_human_name": "Triggers automatically on IOC update",
-        "param_description": "Set to True to automatically add a intelowl insight each time an IOC is updated",
+        "param_description": "Set to True to automatically add a IntelOwl insight each time an IOC is updated",
         "default": False,
         "mandatory": True,
         "type": "bool",
@@ -64,14 +72,14 @@ module_configuration = [
     },
     {
         "param_name": "intelowl_report_as_attribute",
-        "param_human_name": "Add intelowl report as new IOC attribute",
-        "param_description": "Creates a new attribute on the IOC, base on the intelowl report. Attributes are based "
+        "param_human_name": "Add IntelOwl report as new IOC attribute",
+        "param_description": "Creates a new attribute on the IOC, base on the IntelOwl report. Attributes are based "
                              "on the templates of this configuration",
         "default": True,
         "mandatory": True,
         "type": "bool",
         "section": "Insights"
-    },# TODO: careful here, remove backslashes from \{\{ results| tojson(indent=4) \}\}
+    },
     {
         "param_name": "intelowl_domain_report_template",
         "param_human_name": "Domain report template",
@@ -89,7 +97,7 @@ module_configuration = [
                    "class=\"span-mode\"></div>\n                </div>\n                <div "
                    "id=\"drop_raw_intelowl\" class=\"collapse\" aria-labelledby=\"drop_r_intelowl\" "
                    "style=\"\">\n                    <div class=\"card-body\">\n              "
-                   "          <div id='intelowl_raw_ace'>\{\{ results| tojson(indent=4) \}\}</div>\n  "
+                   "          <div id='intelowl_raw_ace'>{{ results| tojson(indent=4) }}</div>\n  "
                    "                  </div>\n                </div>\n            </div>\n    "
                    "    </div>\n    </div>\n</div> \n<script>\nvar intelowl_in_raw = ace.edit("
                    "\"intelowl_raw_ace\",\n{\n    autoScrollEditorIntoView: true,\n    minLines: "
