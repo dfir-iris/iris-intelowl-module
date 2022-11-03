@@ -80,7 +80,7 @@ class IntelowlHandler(object):
 
     def handle_domain(self, ioc):
         """
-        Handles an IOC of type domain and adds VT insights
+        Handles an IOC of type domain and adds IntelOwl insights
 
         :param ioc: IOC instance
         :return: IIStatus
@@ -89,11 +89,11 @@ class IntelowlHandler(object):
         self.log.info(f'Getting domain report for {ioc.ioc_value}')
 
         domain = ioc.ioc_value
-        results = self.intelowl.send_observable_analysis_request(observable_name=domain)
+        results = self.intelowl.send_observable_analysis_request(observable_name=domain, observable_classification="domain")
         job_id = results["job_id"]
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
-            self.log.info('Adding new attribute intelowl Domain Report to IOC')
+            self.log.info('Adding new attribute IntelOwl Domain Report to IOC')
 
             report = [results]
 
@@ -105,7 +105,7 @@ class IntelowlHandler(object):
             rendered_report = status.get_data()
 
             try:
-                add_tab_attribute_field(ioc, tab_name='intelowl Report', field_name="HTML report", field_type="html",
+                add_tab_attribute_field(ioc, tab_name='IntelOwl Report', field_name="HTML report", field_type="html",
                                         field_value=rendered_report)
 
             except Exception:
@@ -118,13 +118,157 @@ class IntelowlHandler(object):
         return InterfaceStatus.I2Success()
 
     def handle_ip(self, ioc):
-        pass
+        """
+        Handles an IOC of type ip and adds IntelOwl insights
+
+        :param ioc: IOC instance
+        :return: IIStatus
+        """
+
+        self.log.info(f'Getting IP report for {ioc.ioc_value}')
+
+        ip = ioc.ioc_value
+        results = self.intelowl.send_observable_analysis_request(observable_name=ip, observable_classification="ip")
+        job_id = results["job_id"]
+
+        if self.mod_config.get('intelowl_report_as_attribute') is True:
+            self.log.info('Adding new attribute IntelOwl IP Report to IOC')
+
+            report = [results]
+
+            status = self.gen_ip_report_from_template(self.mod_config.get('intelowl_ip_report_template'), report)
+
+            if not status.is_success():
+                return status
+
+            rendered_report = status.get_data()
+
+            try:
+                add_tab_attribute_field(ioc, tab_name='IntelOwl Report', field_name="HTML report", field_type="html",
+                                        field_value=rendered_report)
+
+            except Exception:
+
+                self.log.error(traceback.format_exc())
+                return InterfaceStatus.I2Error(traceback.format_exc())
+        else:
+            self.log.info('Skipped adding attribute report. Option disabled')
+
+        return InterfaceStatus.I2Success()
 
     def handle_url(self, ioc):
-        pass
+        """
+        Handles an IOC of type URL and adds IntelOwl insights
+
+        :param ioc: IOC instance
+        :return: IIStatus
+        """
+
+        self.log.info(f'Getting URL report for {ioc.ioc_value}')
+
+        url = ioc.ioc_value
+        results = self.intelowl.send_observable_analysis_request(observable_name=url, observable_classification="url")
+        job_id = results["job_id"]
+
+        if self.mod_config.get('intelowl_report_as_attribute') is True:
+            self.log.info('Adding new attribute IntelOwl URL Report to IOC')
+
+            report = [results]
+
+            status = self.gen_url_report_from_template(self.mod_config.get('intelowl_url_report_template'), report)
+
+            if not status.is_success():
+                return status
+
+            rendered_report = status.get_data()
+
+            try:
+                add_tab_attribute_field(ioc, tab_name='IntelOwl Report', field_name="HTML report", field_type="html",
+                                        field_value=rendered_report)
+
+            except Exception:
+
+                self.log.error(traceback.format_exc())
+                return InterfaceStatus.I2Error(traceback.format_exc())
+        else:
+            self.log.info('Skipped adding attribute report. Option disabled')
+
+        return InterfaceStatus.I2Success()
 
     def handle_hash(self, ioc):
-        pass
+        """
+        Handles an IOC of type hash and adds IntelOwl insights
+
+        :param ioc: IOC instance
+        :return: IIStatus
+        """
+
+        self.log.info(f'Getting hash report for {ioc.ioc_value}')
+
+        hash = ioc.ioc_value
+        results = self.intelowl.send_observable_analysis_request(observable_name=hash, observable_classification="hash")
+        job_id = results["job_id"]
+
+        if self.mod_config.get('intelowl_report_as_attribute') is True:
+            self.log.info('Adding new attribute IntelOwl hash Report to IOC')
+
+            report = [results]
+
+            status = self.gen_hash_report_from_template(self.mod_config.get('intelowl_hash_report_template'), report)
+
+            if not status.is_success():
+                return status
+
+            rendered_report = status.get_data()
+
+            try:
+                add_tab_attribute_field(ioc, tab_name='IntelOwl Report', field_name="HTML report", field_type="html",
+                                        field_value=rendered_report)
+
+            except Exception:
+
+                self.log.error(traceback.format_exc())
+                return InterfaceStatus.I2Error(traceback.format_exc())
+        else:
+            self.log.info('Skipped adding attribute report. Option disabled')
+
+        return InterfaceStatus.I2Success()
 
     def handle_generic(self, ioc):
-        pass
+        """
+        Handles an IOC of type generic and adds IntelOwl insights
+
+        :param ioc: IOC instance
+        :return: IIStatus
+        """
+
+        self.log.info(f'Getting generic report for {ioc.ioc_value}')
+
+        generic = ioc.ioc_value
+        results = self.intelowl.send_observable_analysis_request(observable_name=generic, observable_classification="generic")
+        job_id = results["job_id"]
+
+        if self.mod_config.get('intelowl_report_as_attribute') is True:
+            self.log.info('Adding new attribute IntelOwl generic Report to IOC')
+
+            report = [results]
+
+            status = self.gen_generic_report_from_template(self.mod_config.get('intelowl_generic_report_template'), report)
+
+            if not status.is_success():
+                return status
+
+            rendered_report = status.get_data()
+
+            try:
+                add_tab_attribute_field(ioc, tab_name='IntelOwl Report', field_name="HTML report", field_type="html",
+                                        field_value=rendered_report)
+
+            except Exception:
+
+                self.log.error(traceback.format_exc())
+                return InterfaceStatus.I2Error(traceback.format_exc())
+        else:
+            self.log.info('Skipped adding attribute report. Option disabled')
+
+        return InterfaceStatus.I2Success()
