@@ -116,3 +116,15 @@ class IntelowlHandler(object):
             self.log.info('Skipped adding attribute report. Option disabled')
 
         return InterfaceStatus.I2Success()
+
+    def handle_ip(self, ioc):
+        pass
+
+    def handle_url(self, ioc):
+        pass
+
+    def handle_hash(self, ioc):
+        pass
+
+    def handle_generic(self, ioc):
+        pass

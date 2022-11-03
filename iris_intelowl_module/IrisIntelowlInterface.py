@@ -121,17 +121,25 @@ class IrisIntelowlInterface(IrisModuleInterface):
 
         for element in data:
             # Check that the IOC we receive is of type the module can handle and dispatch
-            if 'domain' in element.ioc_type.type_name:
+            if 'ip-' in element.ioc_type.type_name:
+                status = intelowl_handler.handle_ip(ioc=element)
+                in_status = InterfaceStatus.merge_status(in_status, status)
+            elif 'domain' in element.ioc_type.type_name:
                 status = intelowl_handler.handle_domain(ioc=element)
                 in_status = InterfaceStatus.merge_status(in_status, status)
+            elif 'url' in element.ioc_type.type_name:
+                status = intelowl_handler.handle_url(ioc=element)
+                in_status = InterfaceStatus.merge_status(in_status, status)
+            elif element.ioc_type.type_name in ['md5', 'sha1', 'sha224', 'sha256', 'sha512']:
+                status = intelowl_handler.handle_hash(ioc=element)
+                in_status = InterfaceStatus.merge_status(in_status, status)
+            else:
+                status = intelowl_handler.handle_generic(ioc=element)
+                in_status = InterfaceStatus.merge_status(in_status, status)
 
-            # elif element.ioc_type.type_name in ['md5', 'sha224', 'sha256', 'sha512']:
-            #    status = intelowl_handler.handle_hash(ioc=element)
-            #    in_status = InterfaceStatus.merge_status(in_status, status)
-            #
             # elif element.ioc_type.type_name in etc...
 
-            else:
-                self.log.error(f'IOC type {element.ioc_type.type_name} not handled by intelowl module. Skipping')
+            #else:
+            #    self.log.error(f'IOC type {element.ioc_type.type_name} not handled by intelowl module. Skipping')
 
         return in_status(data=data)
