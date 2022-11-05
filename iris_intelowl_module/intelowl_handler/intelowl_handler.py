@@ -36,8 +36,6 @@ class IntelowlHandler(object):
         should_use_proxy = self.mod_config.get('intelowl_should_use_proxy')
         proxies = {}
 
-        # https://github.com/intelowlproject/pyintelowl/issues/160
-        # PyIntelOwl doesn't get proxy settings as argument
         if should_use_proxy is True:
             if self.server_config.get('http_proxy'):
                 proxies['https'] = self.server_config.get('HTTPS_PROXY')
@@ -49,6 +47,7 @@ class IntelowlHandler(object):
             key,
             url,
             None,
+            proxies=proxies
         )
 
         return intelowl
@@ -58,7 +57,107 @@ class IntelowlHandler(object):
         Generates an HTML report for Domain, displayed as an attribute in the IOC
 
         :param html_template: A string representing the HTML template
-        :param misp_report: The JSON report fetched with intelowl API
+        :param intelowl_report: The JSON report fetched with intelowl API
+        :return: InterfaceStatus
+        """
+        template = Template(html_template)
+        context = intelowl_report
+        pre_render = dict({"results": []})
+
+        for intelowl_result in context:
+            pre_render["results"].append(intelowl_result)
+
+        try:
+            rendered = template.render(pre_render)
+
+        except Exception:
+
+            self.log.error(traceback.format_exc())
+            return InterfaceStatus.I2Error(traceback.format_exc())
+
+        return InterfaceStatus.I2Success(data=rendered)
+
+    def gen_ip_report_from_template(self, html_template, intelowl_report) -> InterfaceStatus:
+        """
+        Generates an HTML report for IP, displayed as an attribute in the IOC
+
+        :param html_template: A string representing the HTML template
+        :param intelowl_report: The JSON report fetched with intelowl API
+        :return: InterfaceStatus
+        """
+        template = Template(html_template)
+        context = intelowl_report
+        pre_render = dict({"results": []})
+
+        for intelowl_result in context:
+            pre_render["results"].append(intelowl_result)
+
+        try:
+            rendered = template.render(pre_render)
+
+        except Exception:
+
+            self.log.error(traceback.format_exc())
+            return InterfaceStatus.I2Error(traceback.format_exc())
+
+        return InterfaceStatus.I2Success(data=rendered)
+
+    def gen_url_report_from_template(self, html_template, intelowl_report) -> InterfaceStatus:
+        """
+        Generates an HTML report for URL, displayed as an attribute in the IOC
+
+        :param html_template: A string representing the HTML template
+        :param intelowl_report: The JSON report fetched with intelowl API
+        :return: InterfaceStatus
+        """
+        template = Template(html_template)
+        context = intelowl_report
+        pre_render = dict({"results": []})
+
+        for intelowl_result in context:
+            pre_render["results"].append(intelowl_result)
+
+        try:
+            rendered = template.render(pre_render)
+
+        except Exception:
+
+            self.log.error(traceback.format_exc())
+            return InterfaceStatus.I2Error(traceback.format_exc())
+
+        return InterfaceStatus.I2Success(data=rendered)
+
+    def gen_hash_report_from_template(self, html_template, intelowl_report) -> InterfaceStatus:
+        """
+        Generates an HTML report for Hash, displayed as an attribute in the IOC
+
+        :param html_template: A string representing the HTML template
+        :param intelowl_report: The JSON report fetched with intelowl API
+        :return: InterfaceStatus
+        """
+        template = Template(html_template)
+        context = intelowl_report
+        pre_render = dict({"results": []})
+
+        for intelowl_result in context:
+            pre_render["results"].append(intelowl_result)
+
+        try:
+            rendered = template.render(pre_render)
+
+        except Exception:
+
+            self.log.error(traceback.format_exc())
+            return InterfaceStatus.I2Error(traceback.format_exc())
+
+        return InterfaceStatus.I2Success(data=rendered)
+
+    def gen_generic_report_from_template(self, html_template, intelowl_report) -> InterfaceStatus:
+        """
+        Generates an HTML report for Generic ioc, displayed as an attribute in the IOC
+
+        :param html_template: A string representing the HTML template
+        :param intelowl_report: The JSON report fetched with intelowl API
         :return: InterfaceStatus
         """
         template = Template(html_template)
