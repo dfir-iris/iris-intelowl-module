@@ -10,5 +10,5 @@ setup(
     author='dfir-iris',
     author_email='contact@dfir-iris.org',
     description='`iris-intelowl-module` is a IRIS processor module providing open-source threat intelligence leveraging IntelOlw analyzers, to enrich indicators of compromise',
-    install_requires=['pyintelowl']
+    install_requires=['pyintelowl>=4.4.0']
 )
