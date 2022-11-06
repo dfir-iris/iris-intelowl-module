@@ -16,7 +16,7 @@ import iris_interface.IrisInterfaceStatus as InterfaceStatus
 from app.datamgmt.manage.manage_attribute_db import add_tab_attribute_field
 
 from pyintelowl import IntelOwl, IntelOwlClientException
-
+from time import sleep
 
 class IntelowlHandler(object):
     def __init__(self, mod_config, server_config, logger):
@@ -177,6 +177,28 @@ class IntelowlHandler(object):
 
         return InterfaceStatus.I2Success(data=rendered)
 
+    def get_job_result(self, job_id):
+        """
+        Periodically fetches job status until it's finished to get the results
+
+        :param job_id: Union[int, str], The job ID to query
+        :return:
+        """
+        max_job_time = 120
+        wait_interval = 2
+
+        job_result = self.intelowl.get_job_by_id(job_id)
+        status = job_result["status"]
+
+        spent_time = 0
+        while (status == "pending" or status == "running") and spent_time <= max_job_time:
+            sleep(wait_interval)
+            spent_time += wait_interval
+            job_result = self.intelowl.get_job_by_id(job_id)
+            status = job_result["status"]
+
+        return job_result
+
     def handle_domain(self, ioc):
         """
         Handles an IOC of type domain and adds IntelOwl insights
@@ -188,13 +210,24 @@ class IntelowlHandler(object):
         self.log.info(f'Getting domain report for {ioc.ioc_value}')
 
         domain = ioc.ioc_value
-        results = self.intelowl.send_observable_analysis_request(observable_name=domain, observable_classification="domain")
-        job_id = results["job_id"]
+        try:
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=domain, observable_classification="domain")
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
+
+        job_id = query_result.get("job_id")
+
+        try:
+            job_result = self.get_job_result(job_id)
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl Domain Report to IOC')
 
-            report = [results]
+            report = [job_result]
 
             status = self.gen_domain_report_from_template(self.mod_config.get('intelowl_domain_report_template'), report)
 
@@ -227,13 +260,24 @@ class IntelowlHandler(object):
         self.log.info(f'Getting IP report for {ioc.ioc_value}')
 
         ip = ioc.ioc_value
-        results = self.intelowl.send_observable_analysis_request(observable_name=ip, observable_classification="ip")
-        job_id = results["job_id"]
+        try:
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=ip, observable_classification="ip")
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
+
+        job_id = query_result.get("job_id")
+
+        try:
+            job_result = self.get_job_result(job_id)
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl IP Report to IOC')
 
-            report = [results]
+            report = [job_result]
 
             status = self.gen_ip_report_from_template(self.mod_config.get('intelowl_ip_report_template'), report)
 
@@ -266,13 +310,24 @@ class IntelowlHandler(object):
         self.log.info(f'Getting URL report for {ioc.ioc_value}')
 
         url = ioc.ioc_value
-        results = self.intelowl.send_observable_analysis_request(observable_name=url, observable_classification="url")
-        job_id = results["job_id"]
+        try:
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=url, observable_classification="url")
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
+
+        job_id = query_result.get("job_id")
+
+        try:
+            job_result = self.get_job_result(job_id)
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl URL Report to IOC')
 
-            report = [results]
+            report = [job_result]
 
             status = self.gen_url_report_from_template(self.mod_config.get('intelowl_url_report_template'), report)
 
@@ -305,13 +360,24 @@ class IntelowlHandler(object):
         self.log.info(f'Getting hash report for {ioc.ioc_value}')
 
         hash = ioc.ioc_value
-        results = self.intelowl.send_observable_analysis_request(observable_name=hash, observable_classification="hash")
-        job_id = results["job_id"]
+        try:
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=hash, observable_classification="hash")
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
+
+        job_id = query_result.get("job_id")
+
+        try:
+            job_result = self.get_job_result(job_id)
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl hash Report to IOC')
 
-            report = [results]
+            report = [job_result]
 
             status = self.gen_hash_report_from_template(self.mod_config.get('intelowl_hash_report_template'), report)
 
@@ -344,13 +410,24 @@ class IntelowlHandler(object):
         self.log.info(f'Getting generic report for {ioc.ioc_value}')
 
         generic = ioc.ioc_value
-        results = self.intelowl.send_observable_analysis_request(observable_name=generic, observable_classification="generic")
-        job_id = results["job_id"]
+        try:
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=generic, observable_classification="generic")
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
+
+        job_id = query_result.get("job_id")
+
+        try:
+            job_result = self.get_job_result(job_id)
+        except IntelOwlClientException as e:
+            self.log.error(e)
+            return InterfaceStatus.I2Error(e)
 
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl generic Report to IOC')
 
-            report = [results]
+            report = [job_result]
 
             status = self.gen_generic_report_from_template(self.mod_config.get('intelowl_generic_report_template'), report)
 
