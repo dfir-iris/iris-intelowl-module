@@ -184,7 +184,7 @@ class IntelowlHandler(object):
         :param job_id: Union[int, str], The job ID to query
         :return:
         """
-        max_job_time = 120
+        max_job_time = 360
         wait_interval = 2
 
         job_result = self.intelowl.get_job_by_id(job_id)
