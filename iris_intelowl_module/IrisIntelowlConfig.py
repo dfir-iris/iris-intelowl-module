@@ -44,6 +44,14 @@ module_configuration = [
         "type": "bool"
     },
     {
+        "param_name": "intelowl_maxtime",
+        "param_human_name": "Maximum job time (minutes)",
+        "param_description": "Set the maximum time the IRIS task should wait until the end of the IntelOwl job",
+        "default": 15,
+        "mandatory": False,
+        "type": "integer"
+    },
+    {
         "param_name": "intelowl_manual_hook_enabled",
         "param_human_name": "Manual triggers on IOCs",
         "param_description": "Set to True to offers possibility to manually triggers the module via the UI",

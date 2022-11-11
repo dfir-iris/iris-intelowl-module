@@ -18,6 +18,7 @@ from app.datamgmt.manage.manage_attribute_db import add_tab_attribute_field
 from pyintelowl import IntelOwl, IntelOwlClientException
 from time import sleep
 
+
 class IntelowlHandler(object):
     def __init__(self, mod_config, server_config, logger):
         self.mod_config = mod_config
@@ -184,7 +185,12 @@ class IntelowlHandler(object):
         :param job_id: Union[int, str], The job ID to query
         :return:
         """
-        max_job_time = 360
+        try:
+            max_job_time = self.mod_config.get("intelowl_maxtime") * 60
+        except Exception:
+            self.log.error(traceback.format_exc())
+            return InterfaceStatus.I2Error(traceback.format_exc())
+
         wait_interval = 2
 
         job_result = self.intelowl.get_job_by_id(job_id)
@@ -211,7 +217,8 @@ class IntelowlHandler(object):
 
         domain = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=domain, observable_classification="domain")
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=domain,
+                                                                          observable_classification="domain")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -229,7 +236,8 @@ class IntelowlHandler(object):
 
             report = [job_result]
 
-            status = self.gen_domain_report_from_template(self.mod_config.get('intelowl_domain_report_template'), report)
+            status = self.gen_domain_report_from_template(self.mod_config.get('intelowl_domain_report_template'),
+                                                          report)
 
             if not status.is_success():
                 return status
@@ -261,7 +269,8 @@ class IntelowlHandler(object):
 
         ip = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=ip, observable_classification="ip")
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=ip,
+                                                                          observable_classification="ip")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -311,7 +320,8 @@ class IntelowlHandler(object):
 
         url = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=url, observable_classification="url")
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=url,
+                                                                          observable_classification="url")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -361,7 +371,8 @@ class IntelowlHandler(object):
 
         hash = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=hash, observable_classification="hash")
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=hash,
+                                                                          observable_classification="hash")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -411,7 +422,8 @@ class IntelowlHandler(object):
 
         generic = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=generic, observable_classification="generic")
+            query_result = self.intelowl.send_observable_analysis_request(observable_name=generic,
+                                                                          observable_classification="generic")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -429,7 +441,8 @@ class IntelowlHandler(object):
 
             report = [job_result]
 
-            status = self.gen_generic_report_from_template(self.mod_config.get('intelowl_generic_report_template'), report)
+            status = self.gen_generic_report_from_template(self.mod_config.get('intelowl_generic_report_template'),
+                                                           report)
 
             if not status.is_success():
                 return status
