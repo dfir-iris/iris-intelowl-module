@@ -53,6 +53,30 @@ class IntelowlHandler(object):
 
         return intelowl
 
+    def prerender_report(self, intelowl_report) -> dict:
+
+        pre_render = dict()
+        pre_render["results"] = intelowl_report
+
+        analyzer_reports = intelowl_report.get("analyzer_reports")
+        connector_reports = intelowl_report.get("connector_reports")
+
+        if analyzer_reports:
+            pre_render["nb_analyzer_reports"] = len(analyzer_reports)
+
+        if connector_reports:
+            pre_render["nb_connector_reports"] = len(connector_reports)
+
+        iol_report_id = intelowl_report.get("id")
+        if iol_report_id:
+            iol_report_link = "/".join((self.mod_config.get("intelowl_url").strip("/"), "jobs", str(iol_report_id)))
+        else:
+            iol_report_link = ""
+
+        pre_render["external_link"] = iol_report_link
+
+        return pre_render
+
     def gen_domain_report_from_template(self, html_template, intelowl_report) -> InterfaceStatus:
         """
         Generates an HTML report for Domain, displayed as an attribute in the IOC
@@ -62,11 +86,7 @@ class IntelowlHandler(object):
         :return: InterfaceStatus
         """
         template = Template(html_template)
-        context = intelowl_report
-        pre_render = dict({"results": []})
-
-        for intelowl_result in context:
-            pre_render["results"].append(intelowl_result)
+        pre_render = self.prerender_report(intelowl_report)
 
         try:
             rendered = template.render(pre_render)
@@ -87,11 +107,7 @@ class IntelowlHandler(object):
         :return: InterfaceStatus
         """
         template = Template(html_template)
-        context = intelowl_report
-        pre_render = dict({"results": []})
-
-        for intelowl_result in context:
-            pre_render["results"].append(intelowl_result)
+        pre_render = self.prerender_report(intelowl_report)
 
         try:
             rendered = template.render(pre_render)
@@ -112,11 +128,7 @@ class IntelowlHandler(object):
         :return: InterfaceStatus
         """
         template = Template(html_template)
-        context = intelowl_report
-        pre_render = dict({"results": []})
-
-        for intelowl_result in context:
-            pre_render["results"].append(intelowl_result)
+        pre_render = self.prerender_report(intelowl_report)
 
         try:
             rendered = template.render(pre_render)
@@ -137,11 +149,7 @@ class IntelowlHandler(object):
         :return: InterfaceStatus
         """
         template = Template(html_template)
-        context = intelowl_report
-        pre_render = dict({"results": []})
-
-        for intelowl_result in context:
-            pre_render["results"].append(intelowl_result)
+        pre_render = self.prerender_report(intelowl_report)
 
         try:
             rendered = template.render(pre_render)
@@ -162,11 +170,7 @@ class IntelowlHandler(object):
         :return: InterfaceStatus
         """
         template = Template(html_template)
-        context = intelowl_report
-        pre_render = dict({"results": []})
-
-        for intelowl_result in context:
-            pre_render["results"].append(intelowl_result)
+        pre_render = self.prerender_report(intelowl_report)
 
         try:
             rendered = template.render(pre_render)
@@ -234,7 +238,7 @@ class IntelowlHandler(object):
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl Domain Report to IOC')
 
-            report = [job_result]
+            report = job_result
 
             status = self.gen_domain_report_from_template(self.mod_config.get('intelowl_domain_report_template'),
                                                           report)
@@ -286,7 +290,7 @@ class IntelowlHandler(object):
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl IP Report to IOC')
 
-            report = [job_result]
+            report = job_result
 
             status = self.gen_ip_report_from_template(self.mod_config.get('intelowl_ip_report_template'), report)
 
@@ -337,7 +341,7 @@ class IntelowlHandler(object):
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl URL Report to IOC')
 
-            report = [job_result]
+            report = job_result
 
             status = self.gen_url_report_from_template(self.mod_config.get('intelowl_url_report_template'), report)
 
@@ -388,7 +392,7 @@ class IntelowlHandler(object):
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl hash Report to IOC')
 
-            report = [job_result]
+            report = job_result
 
             status = self.gen_hash_report_from_template(self.mod_config.get('intelowl_hash_report_template'), report)
 
@@ -439,7 +443,7 @@ class IntelowlHandler(object):
         if self.mod_config.get('intelowl_report_as_attribute') is True:
             self.log.info('Adding new attribute IntelOwl generic Report to IOC')
 
-            report = [job_result]
+            report = job_result
 
             status = self.gen_generic_report_from_template(self.mod_config.get('intelowl_generic_report_template'),
                                                            report)
