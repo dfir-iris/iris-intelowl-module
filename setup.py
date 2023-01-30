@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='iris-intelowl-module',
-    python_requires='>=3.9',
+    python_requires='>=3.8',
     version='0.1.0',
     packages=['iris_intelowl_module', 'iris_intelowl_module.intelowl_handler'],
     url='https://github.com/dfir-iris/iris-intelowl-module',

@@ -66,7 +66,7 @@ class IrisIntelowlInterface(IrisModuleInterface):
 
         if module_conf.get('intelowl_manual_hook_enabled'):
             status = self.register_to_hook(module_id, iris_hook_name='on_manual_trigger_ioc',
-                                           manual_hook_name='Get intelowl insight')
+                                           manual_hook_name='Get IntelOwl insight')
             if status.is_failure():
                 self.log.error(status.get_message())
                 self.log.error(status.get_data())
