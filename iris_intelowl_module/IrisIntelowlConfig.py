@@ -8,8 +8,8 @@
 #
 #  License Apache Software License 3.0
 
-module_name = "IrisIntelowl"
-module_description = ""
+module_name = "Iris IntelOwl"
+module_description = "Provides a connector with IntelOwl - allows to pull insights from IntelOwl analyzers"
 interface_version = "1.2.0"
 module_version = "0.1.0"
 
