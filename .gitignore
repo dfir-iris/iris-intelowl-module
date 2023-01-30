@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+
+# pytest
+/.cache/
+/.pytest_cache/
+
+# setuptools
+/build/
+/dist/
+.eggs
+
+/docs/build/doctrees
+
+# VirtualEnv
+/venv
+
+# IntelliJ
+*.iml
+/.idea
+
+# Custom
+.DS_Store
+iris_intelowl_module.egg-info/

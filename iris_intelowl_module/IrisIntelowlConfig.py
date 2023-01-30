@@ -10,8 +10,8 @@
 
 module_name = "IrisIntelowl"
 module_description = ""
-interface_version = 1.1
-module_version = 1.0
+interface_version = "1.2.0"
+module_version = "0.1.0"
 
 pipeline_support = False
 pipeline_info = {}
