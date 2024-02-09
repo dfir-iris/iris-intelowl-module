@@ -221,8 +221,10 @@ class IntelowlHandler(object):
 
         domain = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=domain,
-                                                                          observable_classification="domain")
+            query_result = self.intelowl.send_observable_analysis_playbook_request(observable_name=domain,
+                                                                                   playbooks_requested=["FREE_TO_USE_ANALYZERS"],
+                                                                                   tags_labels=["iris"],
+                                                                                   observable_classification="domain")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -273,8 +275,10 @@ class IntelowlHandler(object):
 
         ip = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=ip,
-                                                                          observable_classification="ip")
+            query_result = self.intelowl.send_observable_analysis_playbook_request(observable_name=ip,
+                                                                                   playbooks_requested=["FREE_TO_USE_ANALYZERS"],
+                                                                                   tags_labels=["iris"],
+                                                                                   observable_classification="ip")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -324,8 +328,10 @@ class IntelowlHandler(object):
 
         url = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=url,
-                                                                          observable_classification="url")
+            query_result = self.intelowl.send_observable_analysis_playbook_request(observable_name=url,
+                                                                                   playbooks_requested=["FREE_TO_USE_ANALYZERS"],
+                                                                                   tags_labels=["iris"],
+                                                                                   observable_classification="url")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -375,8 +381,10 @@ class IntelowlHandler(object):
 
         hash = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=hash,
-                                                                          observable_classification="hash")
+            query_result = self.intelowl.send_observable_analysis_playbook_request(observable_name=hash,
+                                                                                   playbooks_requested=["FREE_TO_USE_ANALYZERS"],
+                                                                                   tags_labels=["iris"],
+                                                                                   observable_classification="hash")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
@@ -426,8 +434,10 @@ class IntelowlHandler(object):
 
         generic = ioc.ioc_value
         try:
-            query_result = self.intelowl.send_observable_analysis_request(observable_name=generic,
-                                                                          observable_classification="generic")
+            query_result = self.intelowl.send_observable_analysis_playbook_request(observable_name=generic,
+                                                                                   playbooks_requested=["FREE_TO_USE_ANALYZERS"],
+                                                                                   tags_labels=["iris"],
+                                                                                   observable_classification="generic")
         except IntelOwlClientException as e:
             self.log.error(e)
             return InterfaceStatus.I2Error(e)
